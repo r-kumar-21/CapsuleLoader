@@ -1,0 +1,30 @@
+// swift-tools-version: 6.0
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+    name: "CapsuleLoader",
+    platforms: [
+        .iOS(.v16)
+    ],
+    products: [
+        .library(
+            name: "CapsuleLoader",
+            targets: ["CapsuleLoader"]
+        ),
+    ],
+    targets: [
+        .target(
+            name: "CapsuleLoader",
+            resources: [
+                .copy("PrivacyInfo.xcprivacy")
+            ]
+        ),
+        .testTarget(
+            name: "CapsuleLoaderTests",
+            dependencies: ["CapsuleLoader"]
+        ),
+    ],
+    swiftLanguageModes: [.v6]
+)

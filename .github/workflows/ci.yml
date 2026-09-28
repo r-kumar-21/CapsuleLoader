@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege: the workflow only needs to read the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+  DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=latest
+
+jobs:
+  test:
+    name: Build and test (iOS)
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Show toolchain
+        run: xcodebuild -version && swift --version
+
+      - name: Test package
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -scheme CapsuleLoader \
+            -destination "$DESTINATION" \
+            -skipPackagePluginValidation \
+            SWIFT_TREAT_WARNINGS_AS_ERRORS=YES
+
+      - name: Build example app
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Example/CapsuleLoaderExample.xcodeproj \
+            -scheme CapsuleLoaderExample \
+            -destination "$DESTINATION" \
+            CODE_SIGNING_ALLOWED=NO

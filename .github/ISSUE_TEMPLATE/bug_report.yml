@@ -1,0 +1,33 @@
+name: Bug report
+description: Something is not working as expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal code sample is the fastest way to a fix.
+      render: swift
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: CapsuleLoader version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: iOS and Xcode versions
+      placeholder: "iOS 26.5, Xcode 26.6"
+    validations:
+      required: true
